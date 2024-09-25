@@ -1,9 +1,8 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Image,
   Text,
-  Button,
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
@@ -12,14 +11,26 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const price = '1.790.000 đ';
 
-function HomeScreen({ navigation }) {
+function HomeScreen({ navigation, route }) {
+  const [selectedPhone, setSelectedPhone] = React.useState('cyan');
+  React.useEffect(() => {
+    if (route.params?.selectedPhone) {
+      setSelectedPhone(route.params.selectedPhone);
+    }
+  }, [route.params?.selectedPhone]);
+  const phoneImages = {
+    cyan: require('./images/vs_blue.png'),
+    red: require('./images/vs_red.png'),
+    black: require('./images/vs_black.png'),
+    silver: require('./images/vs_silver.png'),
+  };
   return (
     <View style={styles.container}>
       <View
         style={{
           alignItems: 'center',
         }}>
-        <Image style={styles.image} source={require('./images/vs_blue.png')} />
+        <Image style={styles.image} source={phoneImages[selectedPhone]} />
       </View>
       <View
         style={{
@@ -63,27 +74,62 @@ function HomeScreen({ navigation }) {
   );
 }
 
-function DetailsScreen({ route, navigation }) {
-  const { colorTitile, color, supportBy, brand, totalPrice } = route.params;
+function DetailsScreen({ navigation }) {
+  const [selectedColor, setSelectedColor] = React.useState('cyan');
+  const phoneInfo = {
+    cyan: {
+      phoneImage: require('./images/vs_blue.png'),
+      colorTitle: '',
+      colorName: '',
+      supportBy: '',
+      provider: '',
+      totalPrice: '',
+    },
+    red: {
+      phoneImage: require('./images/vs_red.png'),
+      colorTitle: 'Màu: ',
+      colorName: 'đỏ',
+      supportBy: 'Cung cấp bởi ',
+      provider: 'Tiki Tradding',
+      totalPrice: '1.790.000 đ',
+    },
+    black: {
+      phoneImage: require('./images/vs_black.png'),
+      colorTitle: 'Màu: ',
+      colorName: 'đen',
+      supportBy: 'Cung cấp bởi ',
+      provider: 'Tiki Tradding',
+      totalPrice: '1.790.000 đ',
+    },
+    silver: {
+      phoneImage: require('./images/vs_silver.png'),
+      colorTitle: 'Màu: ',
+      colorName: 'bạc',
+      supportBy: 'Cung cấp bởi ',
+      provider: 'Tiki Tradding',
+      totalPrice: '1.790.000 đ',
+    },
+  };
+  const selectedPhone = phoneInfo[selectedColor];
   return (
     <View style={styles.container}>
       <View style={{ flexDirection: 'row', marginBottom: 16 }}>
         <Image
-          style={{ height: 140, width: 110, marginRight: 12 }}
-          source={require('./images/vs_blue.png')}
+          style={{ height: 130, width: 105, marginRight: 12 }}
+          source={selectedPhone.phoneImage}
         />
         <View>
           <Text>Điện Thoại Vsmart Joy 3</Text>
           <Text style={styles.marginBottom}>Hàng chính hãng</Text>
           <View style={styles.row}>
-            <Text style={styles.marginBottom}>Màu: </Text>
-            <Text style={styles.bold}>xanh ngọc</Text>
+            <Text style={styles.marginBottom}>{selectedPhone.colorTitle}</Text>
+            <Text style={styles.bold}>{selectedPhone.colorName}</Text>
           </View>
           <View style={styles.row}>
-            <Text style={styles.marginBottom}>Cung cấp bởi </Text>
-            <Text style={styles.bold}>Tiki Tradding</Text>
+            <Text style={styles.marginBottom}>{selectedPhone.supportBy}</Text>
+            <Text style={styles.bold}>{selectedPhone.provider}</Text>
           </View>
-          <Text style={styles.priceBold}>{price}</Text>
+          <Text style={styles.priceBold}>{selectedPhone.totalPrice}</Text>
         </View>
       </View>
       <View style={styles.chooseColorBackground}>
@@ -93,20 +139,22 @@ function DetailsScreen({ route, navigation }) {
         <View style={styles.colorsPlace}>
           <TouchableOpacity
             style={styles.cyanColorPlace}
-            onPress={() => {
-              navigation.push('Details', {
-                colorTitile: 'Màu: ',
-                color: 'đỏ',
-                supportBy: 'Cung cấp bởi ',
-                brand: 'Tiki Tradding',
-                totalPrice: { price },
-              });
-            }}></TouchableOpacity>
-          <TouchableOpacity style={styles.redColorPlace}></TouchableOpacity>
-          <TouchableOpacity style={styles.blackColorPlace}></TouchableOpacity>
-          <TouchableOpacity style={styles.blueColorPlace}></TouchableOpacity>
+            onPress={() => setSelectedColor('cyan')}></TouchableOpacity>
+          <TouchableOpacity
+            style={styles.redColorPlace}
+            onPress={() => setSelectedColor('red')}></TouchableOpacity>
+          <TouchableOpacity
+            style={styles.blackColorPlace}
+            onPress={() => setSelectedColor('black')}></TouchableOpacity>
+          <TouchableOpacity
+            style={styles.blueColorPlace}
+            onPress={() => setSelectedColor('silver')}></TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.doneButton}>
+        <TouchableOpacity
+          style={styles.doneButton}
+          onPress={() =>
+            navigation.navigate('Home', { selectedPhone: selectedColor })
+          }>
           <Text style={styles.buyText}>XONG</Text>
         </TouchableOpacity>
       </View>
