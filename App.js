@@ -9,11 +9,10 @@ import {
 } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-// You can import supported modules from npm
-import { Card } from 'react-native-paper';
+
+const price = '1.790.000 đ';
 
 function HomeScreen({ navigation }) {
-  const price = '1.790.000 đ';
   return (
     <View style={styles.container}>
       <View
@@ -64,21 +63,52 @@ function HomeScreen({ navigation }) {
   );
 }
 
-function DetailsScreen() {
+function DetailsScreen({ route, navigation }) {
+  const { colorTitile, color, supportBy, brand, totalPrice } = route.params;
   return (
     <View style={styles.container}>
-      <View style={{flexDirection: 'row', marginBottom: 16}}>
+      <View style={{ flexDirection: 'row', marginBottom: 16 }}>
         <Image
           style={{ height: 140, width: 110, marginRight: 12 }}
           source={require('./images/vs_blue.png')}
         />
         <View>
           <Text>Điện Thoại Vsmart Joy 3</Text>
-          <Text>Hàng chính hãng</Text>
+          <Text style={styles.marginBottom}>Hàng chính hãng</Text>
+          <View style={styles.row}>
+            <Text style={styles.marginBottom}>Màu: </Text>
+            <Text style={styles.bold}>xanh ngọc</Text>
+          </View>
+          <View style={styles.row}>
+            <Text style={styles.marginBottom}>Cung cấp bởi </Text>
+            <Text style={styles.bold}>Tiki Tradding</Text>
+          </View>
+          <Text style={styles.priceBold}>{price}</Text>
         </View>
       </View>
       <View style={styles.chooseColorBackground}>
-
+        <Text style={styles.chooseColorTextDetails}>
+          Chọn một màu bên dưới:
+        </Text>
+        <View style={styles.colorsPlace}>
+          <TouchableOpacity
+            style={styles.cyanColorPlace}
+            onPress={() => {
+              navigation.push('Details', {
+                colorTitile: 'Màu: ',
+                color: 'đỏ',
+                supportBy: 'Cung cấp bởi ',
+                brand: 'Tiki Tradding',
+                totalPrice: { price },
+              });
+            }}></TouchableOpacity>
+          <TouchableOpacity style={styles.redColorPlace}></TouchableOpacity>
+          <TouchableOpacity style={styles.blackColorPlace}></TouchableOpacity>
+          <TouchableOpacity style={styles.blueColorPlace}></TouchableOpacity>
+        </View>
+        <TouchableOpacity style={styles.doneButton}>
+          <Text style={styles.buyText}>XONG</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -101,6 +131,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 12,
+  },
+  marginBottom: {
+    marginBottom: 12,
   },
   image: {
     height: 261,
@@ -166,8 +199,53 @@ const styles = StyleSheet.create({
   },
   chooseColorBackground: {
     flex: 4,
-    backgroundColor: '#C4C4C4'
-  }
+    backgroundColor: '#C4C4C4',
+  },
+  chooseColorTextDetails: {
+    margin: 16,
+    fontSize: 16,
+  },
+  colorsPlace: {
+    alignItems: 'center',
+  },
+  cyanColorPlace: {
+    marginBottom: 16,
+    width: 80,
+    height: 80,
+    backgroundColor: '#C5F1FB',
+  },
+  redColorPlace: {
+    marginBottom: 16,
+    width: 80,
+    height: 80,
+    backgroundColor: 'red',
+  },
+  blackColorPlace: {
+    marginBottom: 16,
+    width: 80,
+    height: 80,
+    backgroundColor: 'black',
+  },
+  blueColorPlace: {
+    marginBottom: 16,
+    width: 80,
+    height: 80,
+    backgroundColor: '#234896',
+  },
+  doneButton: {
+    marginTop: 24,
+    backgroundColor: '#1952E294',
+    borderRadius: 8,
+    paddingVertical: 8,
+    borderColor: '#CA1536',
+    borderWidth: 1,
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  bold: {
+    fontWeight: 'bold',
+  },
 });
 
 export default App;
